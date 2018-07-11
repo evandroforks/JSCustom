@@ -11,6 +11,9 @@
             "file_extensions": [ "js", "jsx" ],
             "flow_types": true,
             "jsx": true,
+            "custom_template_tags": {
+                "html": "scope:text.html.basic"
+            },
         }
     },
 
