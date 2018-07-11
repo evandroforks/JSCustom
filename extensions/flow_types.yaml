@@ -3,22 +3,40 @@
 ---
 !merge
 variables: !merge
+  arrow_func_lookahead: |-
+    (?x:
+      \s*(async\s*)?
+      (?:
+        {{identifier}}
+        |\( (?: [^()]|\([^()]*\) )* \)
+      )
+      (?:
+        \s*:
+        \s*{{identifier}}
+      )?
+      \s*=>
+    )
+
   class_element_name: |-
-    (?x)\+?(?:
-      {{property_name}}
-      | \#{{identifier}}
+    (?x:
+      \+?
+      (?:
+        \*?
+        {{property_name}}
+        | \#{{identifier}}
+      )
     )
 
   method_lookahead: |-
-    (?x)(?=
+    (?x:(?=
       (?: get|set|async ){{identifier_break}}
       | \*
       | {{property_name}} \s* (?:\(|<)
-    )
+    ))
 
 contexts: !merge
   class-name:
-    - match: '{{identifier}}'
+    - match: '{{non_reserved_identifier}}'
       scope: entity.name.class.js
       set: flow-type-generic-parameters
     - include: else-pop
@@ -51,6 +69,7 @@ contexts: !merge
   function-declaration:
     - match: ''
       set:
+        - function-meta
         - function-declaration-expect-body
         - function-declaration-meta
         - flow-type-annotation
@@ -64,6 +83,7 @@ contexts: !merge
   method-declaration:
     - match: ''
       set:
+        - function-meta
         - function-declaration-expect-body
         - function-declaration-meta
         - flow-type-annotation
@@ -71,22 +91,15 @@ contexts: !merge
         - flow-type-generic-parameters
         - method-name
         - method-declaration-expect-prefix
-
-  export-extended: !prepend
-    - include: flow-type-alias
-    - match: (?:const|let|var){{identifier_break}}
-      scope: storage.type.js
-      set:
-        - variable-binding-list-top
-        - variable-binding-top
+        - function-declaration-expect-async
 
   parenthesized-expression:
     - match: \(
-      scope: punctuation.section.group.js
+      scope: punctuation.section.group.begin.js
       set:
         - meta_scope: meta.group.js
         - match: \)
-          scope: punctuation.section.group.js
+          scope: punctuation.section.group.end.js
           pop: true
         - match: (?=:)
           push: flow-type-annotation
@@ -188,7 +201,6 @@ contexts: !merge
         1: punctuation.definition.comment.js
       push:
         - meta_include_prototype: false
-        - clear_scopes: 1
         - match: '(@)(flow)'
           captures:
             1: punctuation.definition.pragma.js
@@ -202,7 +214,8 @@ contexts: !merge
       set:
         - flow-type-meta
         - flow-type
-    - include: else-pop
+    - match: (?!\s*(?:$|:|//|/\*))
+      pop: true
 
   flow-type-annotation-optional:
     - match: \?(?=:)
@@ -319,7 +332,9 @@ contexts: !merge
   flow-type-typeof:
     - match: typeof{{identifier_break}}
       scope: keyword.operator.js
-      set: expression-no-comma
+      set:
+        - left-expression-end
+        - expression-begin
 
   flow-type-object:
     - match: \{\|

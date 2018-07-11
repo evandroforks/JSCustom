@@ -80,10 +80,6 @@ Highlight template string literals for [Styled Components](https://www.styled-co
 
 These extensions allow you to personalize your highlighting in various ways.
 
-#### `comma_operator`: boolean
-
-Scope the [comma operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comma_Operator) `keyword.operator.comma`. Other uses of the comma, such as to separate array items or function arguments, will still be scoped `punctuation.separator.comma`.
-
 #### `string_object_keys`: boolean
 
 Highlight unquoted object keys as strings, matching [babel-sublime](https://github.com/babel/babel-sublime)'s behavior.
@@ -123,6 +119,10 @@ These options don't affect the syntax highlighting itself, but rather the way th
 #### `name`: string
 
 The name of the syntax as it will appear in the syntax selector. (If this is omitted, the syntax will be named “JS Custom - <var>name</var>”, where <var>name</var> is the key in the `configurations` object.)
+
+#### `scope`: string
+
+The top-level scope that will be used for the syntax. (If this is omitted, the scope will be “source.js.<var>name</var>”, where <var>name</var> is based on the key in the `configurations` object.)
 
 #### `file_extensions`: array
 

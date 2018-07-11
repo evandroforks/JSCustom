@@ -1,6 +1,5 @@
 {
     "defaults": {
-        "comma_operator": false,
         "custom_template_tags": false,
         "flow_types": false,
         "jsx": false,
@@ -17,6 +16,7 @@
 
     "embed_configuration": {
         "name": "JS Custom (Embedded)",
+        "scope": "source.js",
         "hidden": true,
         "file_extensions": [],
         "custom_template_tags": false,
