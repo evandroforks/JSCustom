@@ -4,6 +4,10 @@
         "command": "build_js_custom_syntaxes"
     },
     {
+        "caption": "JS Custom: Clear User Data",
+        "command": "clear_js_custom_user_data"
+    },
+    {
         "caption": "Preferences: JS Custom",
         "command": "edit_settings",
         "args": {
